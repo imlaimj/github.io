@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>表情包生成器</title>
+    <title>没头脑生成器</title>
     <!-- 引入 Noto Sans HK (Regular 400)，风格清爽且粗细适中 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -42,7 +42,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center py-6">
 
-    <h1 class="text-xl font-bold text-gray-300 mb-4 tracking-widest">表情包定制工具</h1>
+    <h1 class="text-xl font-bold text-gray-300 mb-4 tracking-widest">没头脑生成器</h1>
 
     <!-- 1. 表情包预览区域 (Canvas) -->
     <div class="relative w-11/12 max-w-sm bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200" id="canvasContainer">
@@ -126,7 +126,6 @@
         };
 
         function init() {
-            // 修改点：改为读取同目录下的 template.jpg
             const templatePath = 'template.jpg';
             
             bgImage.onload = () => {
@@ -140,7 +139,6 @@
             bgImage.onerror = () => {
                 loadingOverlay.style.display = 'none';
                 isImageLoaded = true;
-                // 如果本地没有 template.jpg，则显示一个默认空白画布
                 canvas.width = 600;
                 canvas.height = 600;
                 drawPlaceholder("未找到 template.jpg，点击上传底图");
@@ -229,7 +227,6 @@
 
         function saveImage() {
             try {
-                // 本地文件读取通常不会触发跨域错误
                 const dataURL = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.download = `表情包_${STATE.text || 'result'}.png`;

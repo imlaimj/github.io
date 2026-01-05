@@ -47,7 +47,7 @@
     <!-- 1. 表情包预览区域 (Canvas) -->
     <div class="relative w-11/12 max-w-sm bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200" id="canvasContainer">
         <div id="loading" class="loading-overlay">
-            <span class="text-sm text-gray-400 animate-pulse">正在载入远程底图...</span>
+            <span class="text-sm text-gray-400 animate-pulse">正在载入底图...</span>
         </div>
         <canvas id="memeCanvas" class="w-full h-auto block bg-white" title="点击手动加载底图"></canvas>
     </div>
@@ -126,7 +126,8 @@
         };
 
         function init() {
-            const remoteUrl = 'https://i.imgs.ovh/2026/01/05/y7CICM.jpeg';
+            // 修改点：改为读取同目录下的 template.jpg
+            const templatePath = 'template.jpg';
             
             bgImage.onload = () => {
                 isImageLoaded = true;
@@ -139,12 +140,13 @@
             bgImage.onerror = () => {
                 loadingOverlay.style.display = 'none';
                 isImageLoaded = true;
+                // 如果本地没有 template.jpg，则显示一个默认空白画布
                 canvas.width = 600;
                 canvas.height = 600;
-                drawPlaceholder("底图加载失败，请尝试刷新或手动上传");
+                drawPlaceholder("未找到 template.jpg，点击上传底图");
             };
 
-            bgImage.src = remoteUrl; 
+            bgImage.src = templatePath; 
 
             canvas.addEventListener('click', () => fileInput.click());
             changeTemplateBtn.addEventListener('click', () => fileInput.click());
@@ -205,7 +207,6 @@
             }
 
             if (STATE.text) {
-                // 使用 Noto Sans HK Regular (400)
                 ctx.font = `400 ${STATE.fontSize}px 'Noto Sans HK', sans-serif`;
                 ctx.fillStyle = '#000000';
                 ctx.textBaseline = 'middle';
@@ -228,6 +229,7 @@
 
         function saveImage() {
             try {
+                // 本地文件读取通常不会触发跨域错误
                 const dataURL = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.download = `表情包_${STATE.text || 'result'}.png`;
@@ -237,7 +239,7 @@
                 const modal = document.createElement('div');
                 modal.className = "fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-50 p-6";
                 modal.innerHTML = `
-                    <p class="text-white mb-4 text-center">由于外部图片跨域保护，无法直接保存。<br>请长按下方图片选择“保存图片”：</p>
+                    <p class="text-white mb-4 text-center">由于浏览器安全限制，无法直接保存。<br>请长按下方图片选择“保存图片”：</p>
                     <img src="${canvas.toDataURL('image/png')}" class="max-w-full rounded-lg shadow-xl">
                     <button class="mt-6 px-6 py-2 bg-white rounded-full font-bold" onclick="this.parentElement.remove()">关闭</button>
                 `;
